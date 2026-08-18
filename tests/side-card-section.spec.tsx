@@ -153,16 +153,26 @@ describe('SideCardSection declarative inventory', () => {
     expect(html).not.toContain('Feature settings')
   })
 
+  it('renders the cross-session width consistency general row', () => {
+    const { store, service } = mount()
+    const html = renderSection(store, service)
+    expect(html).toContain('Consistent width across conversations')
+    expect(html).toContain('All conversations share the same sidebar width')
+    // It is a plain switch row (checkbox), off by default.
+    expect(html).toContain('aria-label="Consistent width across conversations"')
+  })
+
   it('renders the position-compat mode general row: off by default, checked when the pref is on', () => {
     const { store, service } = mount()
     let html = renderSection(store, service)
     // The general row renders its title and description.
     expect(html).toContain('Position compatibility mode')
     expect(html).toContain('Reserve space for the native Windows title bar')
-    // Three general rows now: only interceptOpenPath is checked by default
-    // (openByDefault defaults off, the titleBarCompat row starts UNCHECKED) —
-    // the checked checkbox count is 1 while the total checkbox count is 3.
-    expect(html.match(/type="checkbox"/g)?.length).toBe(3)
+    // Four general switch rows now: only interceptOpenPath is checked by
+    // default (openByDefault, the width-consistency switch, and the
+    // titleBarCompat row start UNCHECKED) — the checked checkbox count is 1
+    // while the total checkbox count is 4.
+    expect(html.match(/type="checkbox"/g)?.length).toBe(4)
     expect(html.match(/checked=""/g)?.length).toBe(1)
     // The row's gear (customize the shift distance) is dormant while the
     // mode is off — the feature-card convention.

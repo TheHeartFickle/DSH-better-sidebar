@@ -79,19 +79,33 @@ export function FileTree(props: {
     })
   }, [sessionId, cwd, storeLevel])
 
-  // The caller's refresh tick wipes the cache (declared BEFORE the load
-  // effect so the reload below sees the empty cache).
+  // Force-reload a directory WITHOUT clearing its existing rows first: the
+  // old tree stays on screen until the fresh listing arrives, so an
+  // auto-refresh push does not blank the explorer into a loading flash.
+  const reloadDir = useCallback((dir: string) => {
+    api.fsTree({ sessionId, cwd }, dir).then((listing) => {
+      storeLevel(dir, { entries: listing.entries })
+    }).catch((error: unknown) => {
+      storeLevel(dir, { error: error instanceof Error ? error.message : String(error) })
+    })
+  }, [sessionId, cwd, storeLevel])
+
+  // The caller's refresh tick reloads the visible set in place (declared
+  // BEFORE the load effect; the load effect's cache check then no-ops for
+  // already-loaded levels).
   const lastTick = useRef(refreshTick)
   useEffect(() => {
     if (lastTick.current === refreshTick) return
     lastTick.current = refreshTick
-    dataRef.current = {}
-    setData({})
-  }, [refreshTick])
+    const root = cwd
+    if (root === undefined) return
+    reloadDir(root)
+    for (const dir of expanded) reloadDir(dir)
+  }, [refreshTick, cwd, expanded, reloadDir])
 
   useEffect(() => {
     // Load the visible set; already-loaded levels (kept in the cache) are
-    // not refetched. Only the refresh tick wipes the cache.
+    // not refetched. The refresh tick above force-reloads them in place.
     const root = cwd
     if (root === undefined) return
     loadDir(root)

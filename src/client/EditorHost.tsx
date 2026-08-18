@@ -105,6 +105,12 @@ export function EditorHost(props: {
     useCallback((callback: () => void) => store.subscribe(callback), [store]),
     useCallback(() => store.getSnapshot().prefs.editorExplorer, [store]),
   )
+  // The auto-refresh file-tree setting lives with the editor settings and
+  // should take effect live (no reload needed).
+  const autoRefresh = useSyncExternalStore(
+    useCallback((callback: () => void) => store.subscribe(callback), [store]),
+    useCallback(() => store.getSnapshot().prefs.autoRefreshFiles, [store]),
+  )
   // A path-less tab shows the empty-state hint in merged mode — and in split
   // mode it is the standalone explorer (tree-only, see the render below).
   const showEmpty = path === ''
@@ -273,6 +279,7 @@ export function EditorHost(props: {
           onOpenFileNewTab={openFileNewTab}
           onOpenFileSide={openFileSide}
           onReferenceFile={onReferenceFile}
+          autoRefresh={autoRefresh}
         />
       </div>
     )
@@ -366,6 +373,7 @@ export function EditorHost(props: {
               onOpenFileNewTab={openFileNewTab}
               onOpenFileSide={openFileSide}
               onReferenceFile={onReferenceFile}
+              autoRefresh={autoRefresh}
             />
           </div>
         )}

@@ -95,6 +95,10 @@ export function builtinTabs(ctx: Context): readonly TabDescriptor[] {
               desc: () => t('editorExplorerSplitDesc'),
             },
           ],
+        }, {
+          key: 'autoRefreshFiles',
+          title: () => t('autoRefreshFiles'),
+          desc: () => t('autoRefreshFilesDesc'),
         }],
       },
       component: ({ ctx, store, scope, tab, expanded, onToggleDir, onReferenceFile }) => (
