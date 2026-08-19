@@ -904,6 +904,17 @@ export function SideCardSection({ store, service }: SideCardSectionProps) {
         </div>
         <div className={css.row}>
           <span className={css.rowText}>
+            <span className={css.title}>{t('settingsWidthPersistentTitle')}</span>
+            <span className={css.desc}>{t('settingsWidthPersistentDesc')}</span>
+          </span>
+          <Switch
+            label={t('settingsWidthPersistentTitle')}
+            checked={prefs.sidebarWidthPersistent}
+            onChange={(next) => { applyPref({ sidebarWidthPersistent: next }) }}
+          />
+        </div>
+        <div className={css.row}>
+          <span className={css.rowText}>
             <span className={css.title}>{t('settingsOpenPathTitle')}</span>
             <span className={css.desc}>{t('settingsOpenPathDesc')}</span>
           </span>

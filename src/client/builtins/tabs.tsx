@@ -114,6 +114,10 @@ export function builtinTabs(ctx: Context, options: BuiltinTabOptions = {}): read
               desc: () => t('editorExplorerSplitDesc'),
             },
           ],
+        }, {
+          key: 'autoRefreshFiles',
+          title: () => t('autoRefreshFiles'),
+          desc: () => t('autoRefreshFilesDesc'),
         }],
         render: ({ pluginSettings, updatePluginSetting }) => (
           <OpenWithSettings pluginSettings={pluginSettings} updatePluginSetting={updatePluginSetting} />
